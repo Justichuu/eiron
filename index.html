@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The Iron Paper</title>
+<meta name="description" content="A decision engine for irony, and a paper that means what it says. Offline, no network, no model.">
+<style>
+:root{--paper:#f7f4ef;--ink:#181320;--muted:#5f5870;--line:#ddd5ca;--hot:#b23a2e;--ok:#1f7a4d}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+ font:17px/1.55 Georgia,"Iowan Old Style",serif;padding:0 18px 80px}
+main{max-width:44rem;margin:0 auto}
+h1{font-size:clamp(30px,6vw,44px);margin:38px 0 4px;letter-spacing:-.5px}
+h2{font-size:24px;margin:38px 0 8px;border-top:1px solid var(--line);padding-top:22px}
+h3{font-size:18px;margin:24px 0 4px}
+.sub{color:var(--muted);margin:0 0 8px;font-style:italic}
+.q{border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:8px 0;
+ background:#fff;display:flex;gap:10px;align-items:center;justify-content:space-between}
+.q p{margin:0;flex:1}
+.faces{display:flex;gap:5px;flex:0 0 auto}
+button{font:inherit;font-size:14px;border:1px solid var(--line);background:#fff;
+ border-radius:7px;padding:5px 11px;cursor:pointer;color:var(--muted)}
+button[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+#out{margin-top:16px}
+.card{border:1px solid var(--line);border-left-width:5px;border-radius:9px;
+ padding:11px 14px;margin:9px 0;background:#fff}
+.yes{border-left-color:var(--ok)} .unk{border-left-color:#b8a13e} .no{border-left-color:var(--line);opacity:.62}
+.card b{display:block;font-size:17px} .card small{color:var(--muted);display:block;margin-top:3px}
+.verdict{background:var(--ink);color:var(--paper);border-radius:10px;padding:13px 16px;margin:14px 0}
+.row{border-bottom:1px solid var(--line);padding:14px 0}
+.row .sig{color:var(--muted);font-size:14px}
+blockquote{margin:10px 0;padding:7px 0 7px 14px;border-left:3px solid var(--hot);
+ color:var(--ink);font-style:italic}
+.foot{color:var(--muted);font-size:14px;margin-top:44px;border-top:1px solid var(--line);padding-top:14px}
+@media (prefers-color-scheme:dark){
+ :root{--paper:#14121a;--ink:#efeaf5;--muted:#a49bb4;--line:#332c3e;--hot:#ff7a68;--ok:#4fd08a}
+ .q,.card{background:#1b1824}
+ button{background:#1b1824}
+ .verdict{background:#efeaf5;color:#14121a}}
+</style></head><body><main>
+
+<h1>The Iron Paper</h1>
+<p class="sub">On eironeia, cleverness, and what is left when the joke stops.</p>
+<p>Answer what you can. Leave the rest unknown. Unknown is a real answer here,
+and the engine will not turn it into a yes.</p>
+
+<h2>Sort a case</h2>
+<div class="q"><p>The words said differ from what was meant.</p><div class="faces"><button onclick="setFace('said_meant',1,this)" aria-pressed="false">yes</button><button onclick="setFace('said_meant',0,this)" aria-pressed="false">no</button><button onclick="setFace('said_meant','U',this)" aria-pressed="true">unknown</button></div></div><div class="q"><p>What happened differs from what was expected.</p><div class="faces"><button onclick="setFace('expect_out',1,this)" aria-pressed="false">yes</button><button onclick="setFace('expect_out',0,this)" aria-pressed="false">no</button><button onclick="setFace('expect_out','U',this)" aria-pressed="true">unknown</button></div></div><div class="q"><p>Someone watching knows what a participant does not.</p><div class="faces"><button onclick="setFace('observer_knows',1,this)" aria-pressed="false">yes</button><button onclick="setFace('observer_knows',0,this)" aria-pressed="false">no</button><button onclick="setFace('observer_knows','U',this)" aria-pressed="true">unknown</button></div></div><div class="q"><p>The gap is meant to be noticed.</p><div class="faces"><button onclick="setFace('meant_caught',1,this)" aria-pressed="false">yes</button><button onclick="setFace('meant_caught',0,this)" aria-pressed="false">no</button><button onclick="setFace('meant_caught','U',this)" aria-pressed="true">unknown</button></div></div><div class="q"><p>The speaker claims not to know.</p><div class="faces"><button onclick="setFace('professed_ign',1,this)" aria-pressed="false">yes</button><button onclick="setFace('professed_ign',0,this)" aria-pressed="false">no</button><button onclick="setFace('professed_ign','U',this)" aria-pressed="true">unknown</button></div></div><div class="q"><p>The method is questioning, not asserting.</p><div class="faces"><button onclick="setFace('asks',1,this)" aria-pressed="false">yes</button><button onclick="setFace('asks',0,this)" aria-pressed="false">no</button><button onclick="setFace('asks','U',this)" aria-pressed="true">unknown</button></div></div><div class="q"><p>One real meaning can be recovered underneath.</p><div class="faces"><button onclick="setFace('stable',1,this)" aria-pressed="false">yes</button><button onclick="setFace('stable',0,this)" aria-pressed="false">no</button><button onclick="setFace('stable','U',this)" aria-pressed="true">unknown</button></div></div><div class="q"><p>The work shows that it knows it is a work.</p><div class="faces"><button onclick="setFace('self_aware',1,this)" aria-pressed="false">yes</button><button onclick="setFace('self_aware',0,this)" aria-pressed="false">no</button><button onclick="setFace('self_aware','U',this)" aria-pressed="true">unknown</button></div></div><div class="q"><p>The aim includes wounding.</p><div class="faces"><button onclick="setFace('hostile',1,this)" aria-pressed="false">yes</button><button onclick="setFace('hostile',0,this)" aria-pressed="false">no</button><button onclick="setFace('hostile','U',this)" aria-pressed="true">unknown</button></div></div><div class="q"><p>It answers an age already soaked in irony.</p><div class="faces"><button onclick="setFace('saturated',1,this)" aria-pressed="false">yes</button><button onclick="setFace('saturated',0,this)" aria-pressed="false">no</button><button onclick="setFace('saturated','U',this)" aria-pressed="true">unknown</button></div></div>
+<div id="out"></div>
+
+<h2>The distinction that does the work</h2>
+<p>A lie and verbal irony have the same shape: said one thing, meant another. They differ by one answer only. The lie needs the gap to go unnoticed. The irony needs it noticed. Intent to be caught is the whole boundary between deceiving someone and telling them something.</p>
+
+<h2>The table</h2>
+<div class="row"><b>A lie</b> <span class="sig">pseudos - always</span><br>Says one thing, means another, and needs the gap to stay unseen.<br><span class="sig">Not: Verbal irony. The lie wants to be believed; irony wants to be caught.</span><br><span class="sig">the boundary case, not a kind of irony</span></div><div class="row"><b>Eironeia, the old insult</b> <span class="sig">eironeia - 5th to 4th c. BC</span><br>Dissembling. Understating what you are and what you know, to win.<br><span class="sig">Not: Socratic method. Here the ignorance is a costume, worn to conceal.</span><br><span class="sig">Aristophanes, Clouds; Plato, Republic 337a, where Thrasymachus spits the word at Socrates as an accusation of dodging</span></div><div class="row"><b>Socratic irony</b> <span class="sig">eironeia, reclaimed - 5th c. BC, argued over ever since</span><br>Professed ignorance plus a question, aimed at the other person's impasse rather than at your own victory.<br><span class="sig">Not: Eironeia. The disagreement about which one Socrates was doing is the oldest live question in this table.</span><br><span class="sig">Plato, Apology 21d and Symposium 216e; Vlastos, Socrates: Ironist and Moral Philosopher, 1991</span></div><div class="row"><b>Verbal irony</b> <span class="sig">the trope - 1st c. AD onward</span><br>Says the opposite and expects you to flip it back.<br><span class="sig">Not: A lie. This one hands you the key with the lock.</span><br><span class="sig">Quintilian, Institutio Oratoria VIII.6.54, irony as a figure in which the opposite of what is said is understood</span></div><div class="row"><b>Sarcasm</b> <span class="sig">sarkazein, to tear flesh - the word carries its own violence</span><br>Verbal irony pointed at someone, meant to leave a mark.<br><span class="sig">Not: Verbal irony in general, which need not wound.</span><br><span class="sig">from Greek sarkazein, literally to strip off flesh</span></div><div class="row"><b>Dramatic irony</b> <span class="sig">tragic irony - named 1833, practised since Sophocles</span><br>The watcher knows what the speaker does not. The speaker is sincere.<br><span class="sig">Not: Verbal irony. Nobody on stage is being clever. That is the point.</span><br><span class="sig">Connop Thirlwall, On the Irony of Sophocles, 1833</span></div><div class="row"><b>Situational irony</b> <span class="sig">cosmic irony, irony of fate - 19th c.</span><br>The outcome mocks the expectation. No one said anything.<br><span class="sig">Not: Bad luck. Irony needs the outcome to answer the expectation, not merely to disappoint it.</span><br><span class="sig">the modern sense, at home in Hardy; the one that needs no speaker</span></div><div class="row"><b>Romantic irony</b> <span class="sig">the work turns and looks at you - 1797 onward</span><br>The work admits it is a work, and keeps going anyway.<br><span class="sig">Not: A mistake. The seam is shown on purpose.</span><br><span class="sig">Friedrich Schlegel, Lyceum and Athenaeum fragments</span></div><div class="row"><b>Unstable irony</b> <span class="sig">no floor - 1974</span><br>The gap is real and there is nothing underneath to recover.<br><span class="sig">Not: Verbal irony, which promises a stable meaning under the flip.</span><br><span class="sig">Wayne Booth, A Rhetoric of Irony</span></div><div class="row"><b>Postmodern irony</b> <span class="sig">everything in quotation marks - late 20th c.</span><br>Irony as the default air, not a move made against a background of sincerity. Quotation with no original.<br><span class="sig">Not: Unstable irony alone. This one is a condition, not a device.</span><br><span class="sig">Linda Hutcheon, Irony's Edge, 1994</span></div><div class="row"><b>Post-irony, new sincerity</b> <span class="sig">saying it straight, on purpose, now - 1993 onward</span><br>Meaning it, in an age where meaning it reads as a move. Sincerity becomes the transgression.<br><span class="sig">Not: Plain sincerity. This one is sincerity that knows the room.</span><br><span class="sig">David Foster Wallace, E Unibus Pluram, 1993; and the metamodern oscillation described by Vermeulen and van den Akker, 2010</span></div>
+
+<h2>Cleverness, money, and wisdom</h2>
+<p class="sub">Cleverness is universally convertible, and that is exactly why it cannot tell you where to go.</p>
+<h3>Aristotle already separated them</h3><p>Nicomachean Ethics 1144a. Deinotes, cleverness, is the faculty of hitting whatever mark you set. Aristotle is explicit that it is neutral: if the mark is noble the cleverness is praiseworthy, and if the mark is base the same faculty is mere unscrupulousness, panourgia. Phronesis, practical wisdom, is not a different amount of cleverness. It is cleverness plus a mark worth hitting.</p><blockquote>Cleverness is the aim. Wisdom is the aiming at something.</blockquote><h3>Which is why the money comparison is exact</h3><p>Money is the universal equivalent. It converts into anything, and for that reason it says nothing about what to want. Its power is its emptiness. Cleverness is the same instrument in another medium: convertible into any end, silent on which end. Ask how far universal cleverness gets you and the answer is precise. All the way to any destination, and no distance at all toward knowing which destination.</p><blockquote>A universal medium buys everything and recommends nothing.</blockquote><h3>The Socratic answer to what wisdom is</h3><p>Apology 21d. Socrates is told he is the wisest, and concludes he is wiser only in this: he does not think he knows what he does not know. Human wisdom is not a stock of answers. It is an accurate register of where the answers stop.</p><blockquote>Wisdom is knowing the edge of what you know, and saying so.</blockquote><h3>And this is where the two halves meet</h3><p>That claim is why the oldest fight about Socrates never ends. If he truly does not know, the profession of ignorance is honest. If he does know, it is eironeia in the old pejorative sense, a costume. Vlastos called the live version complex irony: he both means it and does not. The engine here refuses to settle that. It marks it U.</p><blockquote>The unresolved case is the case, not a gap in the table.</blockquote><h3>What a third face is for</h3><p>A system with only true and false must answer every question, so it answers some of them falsely. A third face, unknown, is the formal version of the Socratic move: a place to put what you have not established, so that it does not get silently promoted into a yes. Cleverness fills the gaps. Wisdom marks them.</p><blockquote>U is not a missing answer. It is an answer about you.</blockquote>
+<p>So the ranking is not cleverness then wisdom, as though wisdom were more cleverness. Cleverness answers how. Wisdom answers whether. You can have an unlimited amount of the first and none of the second, and the age is full of people proving it.</p>
+
+<h2>Today</h2>
+<p>Irony stopped being a device and became weather.</p><p>Booth in 1974 could still describe a stable kind, where you flip the sentence
+and find the meaning waiting underneath, and an unstable kind where nothing is
+waiting. Hutcheon in 1994 described the next stage, in which the quotation marks
+never come off, and there is no original being quoted.</p><p>The cost is specific and it is not aesthetic. Stable irony is a way of telling
+someone something. Saturated irony is a way of never being answerable for
+anything, because nothing was ever asserted. That is why Wallace in 1993 called
+it a cage rather than a liberation, and why the move that reads as radical now
+is meaning it.</p><p>Which is the situation the last row of the table describes. Sincerity, in a room
+where everyone is protected, is the only remaining way to be caught.</p>
+
+<h2>What this paper does not claim</h2>
+<p>This paper does not claim that the table is complete. It claims
+that each row in it is checkable.</p><p>It does not settle whether Socrates was honest. It marks that unknown, on
+purpose, and the engine will keep marking it unknown until someone supplies the
+answer rather than the confidence.</p><p>It does not claim that irony is bad. Two of the rows are how literature works.</p><p>It claims one thing only, and it is the line the engine enforces: the difference
+between deceiving a person and telling them something is whether you meant the
+gap to be found.</p>
+
+<p class="foot">One file. No network, no storage, no model. Search it for
+<code>fetch(</code> and you will not find one. Generated from
+<code>eiron/kinds.py</code> by <code>python -m eiron build</code>.</p>
+</main>
+<script>var KINDS=[{"key": "lie", "name": "A lie", "gloss": "Says one thing, means another, and needs the gap to stay unseen.", "not_this": "Verbal irony. The lie wants to be believed; irony wants to be caught.", "source": "the boundary case, not a kind of irony", "signature": {"said_meant": 1, "meant_caught": 0}}, {"key": "eironeia", "name": "Eironeia, the old insult", "gloss": "Dissembling. Understating what you are and what you know, to win.", "not_this": "Socratic method. Here the ignorance is a costume, worn to conceal.", "source": "Aristophanes, Clouds; Plato, Republic 337a, where Thrasymachus spits the word at Socrates as an accusation of dodging", "signature": {"said_meant": 1, "professed_ign": 1, "meant_caught": 0}}, {"key": "socratic", "name": "Socratic irony", "gloss": "Professed ignorance plus a question, aimed at the other person's impasse rather than at your own victory.", "not_this": "Eironeia. The disagreement about which one Socrates was doing is the oldest live question in this table.", "source": "Plato, Apology 21d and Symposium 216e; Vlastos, Socrates: Ironist and Moral Philosopher, 1991", "signature": {"professed_ign": 1, "asks": 1, "meant_caught": 1}}, {"key": "verbal", "name": "Verbal irony", "gloss": "Says the opposite and expects you to flip it back.", "not_this": "A lie. This one hands you the key with the lock.", "source": "Quintilian, Institutio Oratoria VIII.6.54, irony as a figure in which the opposite of what is said is understood", "signature": {"said_meant": 1, "meant_caught": 1, "stable": 1}}, {"key": "sarcasm", "name": "Sarcasm", "gloss": "Verbal irony pointed at someone, meant to leave a mark.", "not_this": "Verbal irony in general, which need not wound.", "source": "from Greek sarkazein, literally to strip off flesh", "signature": {"said_meant": 1, "meant_caught": 1, "hostile": 1}}, {"key": "dramatic", "name": "Dramatic irony", "gloss": "The watcher knows what the speaker does not. The speaker is sincere.", "not_this": "Verbal irony. Nobody on stage is being clever. That is the point.", "source": "Connop Thirlwall, On the Irony of Sophocles, 1833", "signature": {"observer_knows": 1, "said_meant": 0}}, {"key": "situational", "name": "Situational irony", "gloss": "The outcome mocks the expectation. No one said anything.", "not_this": "Bad luck. Irony needs the outcome to answer the expectation, not merely to disappoint it.", "source": "the modern sense, at home in Hardy; the one that needs no speaker", "signature": {"expect_out": 1, "said_meant": 0}}, {"key": "romantic", "name": "Romantic irony", "gloss": "The work admits it is a work, and keeps going anyway.", "not_this": "A mistake. The seam is shown on purpose.", "source": "Friedrich Schlegel, Lyceum and Athenaeum fragments", "signature": {"self_aware": 1}}, {"key": "unstable", "name": "Unstable irony", "gloss": "The gap is real and there is nothing underneath to recover.", "not_this": "Verbal irony, which promises a stable meaning under the flip.", "source": "Wayne Booth, A Rhetoric of Irony", "signature": {"said_meant": 1, "stable": 0}}, {"key": "postmodern", "name": "Postmodern irony", "gloss": "Irony as the default air, not a move made against a background of sincerity. Quotation with no original.", "not_this": "Unstable irony alone. This one is a condition, not a device.", "source": "Linda Hutcheon, Irony's Edge, 1994", "signature": {"stable": 0, "saturated": 1}}, {"key": "post_irony", "name": "Post-irony, new sincerity", "gloss": "Meaning it, in an age where meaning it reads as a move. Sincerity becomes the transgression.", "not_this": "Plain sincerity. This one is sincerity that knows the room.", "source": "David Foster Wallace, E Unibus Pluram, 1993; and the metamodern oscillation described by Vermeulen and van den Akker, 2010", "signature": {"said_meant": 0, "meant_caught": 1, "saturated": 1}}];var QT={"said_meant": "The words said differ from what was meant.", "expect_out": "What happened differs from what was expected.", "observer_knows": "Someone watching knows what a participant does not.", "meant_caught": "The gap is meant to be noticed.", "professed_ign": "The speaker claims not to know.", "asks": "The method is questioning, not asserting.", "stable": "One real meaning can be recovered underneath.", "self_aware": "The work shows that it knows it is a work.", "hostile": "The aim includes wounding.", "saturated": "It answers an age already soaked in irony."};
+// Same rule as eiron/engine.py. The data below is generated from the same
+// table, and tests/test_agreement.py runs this file against the Python engine
+// on hundreds of random inputs to prove the two cannot drift apart.
+var A = {};
+function setFace(key, face, btn){
+  A[key] = face;
+  var wrap = btn.parentNode;
+  for (var i=0;i<wrap.children.length;i++) wrap.children[i].setAttribute("aria-pressed","false");
+  btn.setAttribute("aria-pressed","true");
+  render();
+}
+function classify(answers){
+  var applies=[], undecided=[], excluded=[];
+  for (var i=0;i<KINDS.length;i++){
+    var k=KINDS[i], missing=[], failed=null;
+    for (var q in k.signature){
+      var given = answers[q];
+      if (given === undefined || given === "U") missing.push(q);
+      else if (given !== k.signature[q] && failed === null)
+        failed = QT[q]+" is "+given+", this needs "+k.signature[q];
+    }
+    if (failed) excluded.push({k:k, why:failed});
+    else if (missing.length) undecided.push({k:k, why:missing.map(function(q){return "unknown: "+QT[q];})});
+    else applies.push({k:k});
+  }
+  return {applies:applies, undecided:undecided, excluded:excluded};
+}
+function render(){
+  var r = classify(A), h = "";
+  var line;
+  if (!r.applies.length && !r.undecided.length)
+    line = "No kind in the table fits. That is a real answer: not everything is irony.";
+  else if (!r.applies.length)
+    line = "Nothing decided. "+r.undecided.length+" kinds wait on an answer you left unknown.";
+  else {
+    line = r.applies.map(function(v){return v.k.name;}).join(", ");
+    line += r.undecided.length ? ". And "+r.undecided.length+" more cannot be decided yet."
+                               : ". Nothing left unknown.";
+  }
+  h += '<div class="verdict">'+line+'</div>';
+  r.applies.forEach(function(v){
+    h += '<div class="card yes"><b>'+v.k.name+'</b>'+v.k.gloss+
+         '<small>Not: '+v.k.not_this+'</small><small>'+v.k.source+'</small></div>';});
+  r.undecided.forEach(function(v){
+    h += '<div class="card unk"><b>'+v.k.name+' &mdash; undecided</b><small>'+
+         v.why.join('<br>')+'</small></div>';});
+  r.excluded.forEach(function(v){
+    h += '<div class="card no"><b>'+v.k.name+' &mdash; ruled out</b><small>'+v.why+'</small></div>';});
+  document.getElementById("out").innerHTML = h;
+}
+render();</script>
+</body></html>
