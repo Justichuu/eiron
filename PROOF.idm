@@ -1,0 +1,9 @@
+note Eiron proof: Socratic bisection interval width contraction over 3 questions
+step half is 1 over 2
+step split_3 is half power 3
+step contracted is width times split_3
+step over_eight is width over 8
+claim split_3 same as 0.125
+claim contracted same as over_eight
+ask split_3
+note [W] Eiron proves 3 Socratic bisections contract an unsettled interval by 1 over 2 power 3 to 0.125 (width over 8), with 2 claims settled true and 0 failed.
